@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Game of Bharath - An immersive Indian cultural history game prototype login page.">
+    <title>Game of Bharath | Portal Entry</title>
+    
+    <!-- Google Fonts: Standardized SIH Professional Typography (Inter & Outfit) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+    <div id="viewport-wrapper">
+        <!-- Dynamic Cultural Heritage Background Container -->
+        <div class="heritage-bg-container" id="heritageBgContainer">
+            <div class="heritage-bg-layer is-active" id="heritageBgLayerA"></div>
+            <div class="heritage-bg-layer" id="heritageBgLayerB"></div>
+            <div class="heritage-bg-overlay"></div>
+        </div>
+
+        <!-- Indian Art Form Background Layers (Kalamkari, Warli, Chitra) -->
+        <div class="art-layer art-kalamkari-vines"></div>
+        <div class="art-layer art-warli-frieze"></div>
+        <div class="art-layer art-chitra-border"></div>
+        <!-- Ambient Vignette Glows -->
+        <div class="ambient-glow glow-1"></div>
+        <div class="ambient-glow glow-2"></div>
+
+        <!-- Canvas for Anti-Gravity Particle Background -->
+        <canvas id="bg-canvas"></canvas>
+
+        <!-- Sacred Mandala Backdrop Motif -->
+        <svg class="mandala-backdrop" viewBox="0 0 500 500" fill="none">
+            <g stroke="#E6C670" stroke-width="0.75" opacity="0.85">
+                <circle cx="250" cy="250" r="230" stroke-dasharray="4 4"/>
+                <circle cx="250" cy="250" r="215"/>
+                <circle cx="250" cy="250" r="180"/>
+                <circle cx="250" cy="250" r="140" stroke-dasharray="8 4"/>
+                <circle cx="250" cy="250" r="90"/>
+                <circle cx="250" cy="250" r="40"/>
+                <path d="M250 20 L250 480 M20 250 L480 250 M87 87 L413 413 M87 413 L413 87"/>
+            </g>
+        </svg>
+
+        <!-- Audio Atmosphere Toggle -->
+        <button class="audio-control" id="audioToggle" title="Toggle Ambient Audio">
+            <svg class="audio-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            <span id="audioStatusText">SOUND OFF</span>
+        </button>
+
+        <!-- Login Screen Card Container -->
+        <div class="login-screen-wrapper">
+            <main class="login-container">
+                <div class="glass-card" id="loginCard">
+                    <!-- Corner Motifs -->
+                    <svg class="corner-motif corner-top-left" viewBox="0 0 40 40"><path d="M0 0V40H4V4H40V0H0Z" fill="#E6C670"/><circle cx="10" cy="10" r="2" fill="#FFD700"/></svg>
+                    <svg class="corner-motif corner-top-right" viewBox="0 0 40 40"><path d="M0 0V40H4V4H40V0H0Z" fill="#E6C670"/><circle cx="10" cy="10" r="2" fill="#FFD700"/></svg>
+                    <svg class="corner-motif corner-bottom-right" viewBox="0 0 40 40"><path d="M0 0V40H4V4H40V0H0Z" fill="#E6C670"/><circle cx="10" cy="10" r="2" fill="#FFD700"/></svg>
+                    <svg class="corner-motif corner-bottom-left" viewBox="0 0 40 40"><path d="M0 0V40H4V4H40V0H0Z" fill="#E6C670"/><circle cx="10" cy="10" r="2" fill="#FFD700"/></svg>
+
+                    <header class="card-header">
+                        <div class="emblem-wrapper">
+                            <svg class="emblem-svg" viewBox="0 0 100 100" fill="none">
+                                <circle cx="50" cy="50" r="45" stroke="#E6C670" stroke-width="1.5" stroke-dasharray="2 2"/>
+                                <circle cx="50" cy="50" r="38" stroke="#FFD700" stroke-width="1"/>
+                                <path d="M50 18 C55 32 68 35 68 50 C68 65 50 82 50 82 C50 82 32 65 32 50 C32 35 45 32 50 18 Z" fill="url(#emblemGrad)" opacity="0.9"/>
+                                <defs><linearGradient id="emblemGrad" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#8B0000"/></linearGradient></defs>
+                            </svg>
+                        </div>
+                        <p class="subtitle" data-i18n="app_subtitle">Chronicles of Ancient Realms</p>
+                        <h1 class="main-title" data-i18n="app_title">GAME OF BHARATH</h1>
+                        <div class="title-divider"></div>
+                    </header>
+
+                    <form class="login-form" id="loginForm" onsubmit="return false;" novalidate>
+                        <div class="input-group">
+                            <label class="input-label" for="username" data-i18n="identity_label">Identity / Warrior Name</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                <input type="text" id="username" class="form-input" placeholder="Enter Username (e.g. player)" required autocomplete="off"/>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label" for="password" data-i18n="passphrase_label">Passphrase Seal</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                                <input type="password" id="password" class="form-input" placeholder="Enter Password (e.g. player)" required autocomplete="current-password"/>
+                                <button type="button" class="password-toggle" id="togglePassword"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+                            </div>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="checkbox-container"><input type="checkbox" checked><span class="custom-checkbox"></span><span data-i18n="preserve_lineage">Preserve Lineage</span></label>
+                            <a href="#forgot" class="forgot-link" onclick="event.preventDefault(); alert('Try: player / player');" data-i18n="lost_seal">Lost Seal?</a>
+                        </div>
+
+                        <div class="error-message" id="errorMessage">The ancient seals reject these credentials. Verify your lineage.</div>
+
+                        <button type="submit" class="submit-btn" id="submitBtn"><span class="btn-text" data-i18n="enter_realm">ENTER REALM</span></button>
+                    </form>
+                    <p class="demo-hint">Player: <span>player</span> / <span>player</span> &nbsp;|&nbsp; Admin: <span>admin</span> / <span>admin</span></p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- JavaScript Engines -->
+    <script src="js/audio.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

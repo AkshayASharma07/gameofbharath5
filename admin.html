@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Game of Bharath - Admin Dashboard & ML Post-Mortem Analytics Engine.">
+    <title>Game of Bharath | Admin Dashboard &amp; ML Analytics</title>
+    
+    <!-- Google Fonts: Standardized SIH Professional Typography (Inter & Outfit) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/region.css">
+    <style>
+        .admin-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1240px;
+            margin: 20px auto;
+            padding: 24px;
+            background: rgba(18, 9, 28, 0.88);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+            color: var(--text-ivory);
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(230, 198, 112, 0.2);
+            padding-bottom: 16px;
+        }
+        .admin-title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            color: #ffd700;
+            letter-spacing: 2px;
+        }
+        .stats-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .kpi-card {
+            background: rgba(28, 14, 38, 0.8);
+            border: 1px solid rgba(230, 198, 112, 0.3);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .kpi-label { font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; }
+        .kpi-val { font-size: 1.8rem; font-weight: 700; color: #ffd700; font-family: var(--font-title); }
+
+        .firebase-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .analytics-table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(230, 198, 112, 0.25);
+        }
+        table.analytics-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+        table.analytics-table th {
+            background: rgba(45, 20, 56, 0.9);
+            color: #ffd700;
+            padding: 12px 16px;
+            font-family: var(--font-title);
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(230, 198, 112, 0.3);
+        }
+        table.analytics-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-ivory);
+        }
+        table.analytics-table tr:hover { background: rgba(255, 215, 0, 0.08); }
+    </style>
+</head>
+<body class="theme-indian-art">
+
+    <div id="viewport-wrapper">
+        <div class="art-layer art-kalamkari-vines"></div>
+        <div class="art-layer art-warli-frieze"></div>
+        <div class="art-layer art-chitra-border"></div>
+        <div class="ambient-glow glow-1"></div>
+        <div class="ambient-glow glow-2"></div>
+
+        <canvas id="bg-canvas"></canvas>
+
+        <svg class="mandala-backdrop" viewBox="0 0 500 500" fill="none">
+            <g stroke="#E6C670" stroke-width="0.75" opacity="0.85">
+                <circle cx="250" cy="250" r="230" stroke-dasharray="4 4"/>
+                <circle cx="250" cy="250" r="215"/>
+                <circle cx="250" cy="250" r="180"/>
+                <circle cx="250" cy="250" r="140" stroke-dasharray="8 4"/>
+                <circle cx="250" cy="250" r="90"/>
+                <circle cx="250" cy="250" r="40"/>
+                <path d="M250 20 L250 480 M20 250 L480 250 M87 87 L413 413 M87 413 L413 87"/>
+            </g>
+        </svg>
+
+        <button class="audio-control" id="audioToggle" title="Toggle Sound">
+            <svg class="audio-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            <span id="audioStatusText">SOUND OFF</span>
+        </button>
+
+        <div class="admin-wrapper">
+            <header class="admin-header">
+                <div>
+                    <span class="modal-region-badge">GAME OF BHARATH • ML ANALYTICS DASHBOARD</span>
+                    <h1 class="admin-title">POST-MORTEM ML ANALYTICS ENGINE</h1>
+                </div>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <span class="firebase-status-badge">🟢 Firebase Realtime Sync: ONLINE</span>
+                    <span id="adminPlayerBadge" style="font-size:0.8rem;color:#ffd700;padding:4px 10px;border:1px solid rgba(255,215,0,0.3);border-radius:8px;">⚔ player</span>
+                    <a href="map.html" class="nav-btn">➔ RETURN TO MAP</a>
+                    <button class="nav-btn" id="btnAdminLogout" style="background:rgba(180,30,30,0.55);border-color:rgba(255,80,80,0.5);color:#ff9999;">LOGOUT</button>
+                </div>
+            </header>
+
+            <div class="stats-kpi-grid">
+                <div class="kpi-card">
+                    <span class="kpi-label">TOTAL MATCHES LOGGED</span>
+                    <span class="kpi-val" id="kpiTotalMatches">0</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">PLAYER WIN RATE</span>
+                    <span class="kpi-val" id="kpiWinRate">0%</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">AVG MATCH ACCURACY</span>
+                    <span class="kpi-val" id="kpiAvgAccuracy">91.4%</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">MOST PLAYED REGION</span>
+                    <span class="kpi-val" id="kpiTopRegion" style="font-size: 1.3rem;">Odisha</span>
+                </div>
+            </div>
+
+            <!-- Search & Filter Bar -->
+            <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; align-items:center;">
+                <input type="text" id="logSearchInput" placeholder="🔍 Search match ID, region, game, winner..." style="flex:1; min-width:220px; background:rgba(28,14,38,0.85); border:1px solid rgba(230,198,112,0.35); color:#f0e8d0; padding:9px 14px; border-radius:10px; font-family:var(--font-body,Outfit,sans-serif); font-size:0.85rem; outline:none;">
+                <select id="logFilterRegion" style="background:rgba(28,14,38,0.85); border:1px solid rgba(230,198,112,0.35); color:#ffd700; padding:9px 14px; border-radius:10px; font-size:0.85rem;">
+                    <option value="">ALL REGIONS</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Jammu &amp; Kashmir">Jammu &amp; Kashmir</option>
+                </select>
+                <select id="logFilterWinner" style="background:rgba(28,14,38,0.85); border:1px solid rgba(230,198,112,0.35); color:#ffd700; padding:9px 14px; border-radius:10px; font-size:0.85rem;">
+                    <option value="">ALL OUTCOMES</option>
+                    <option value="player">Player Win</option>
+                    <option value="ai">AI Win</option>
+                </select>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 12px;">
+                <h3 style="font-family: var(--font-title); color: #ffd700;">MATCH POST-MORTEM REPLAY LOGS</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="nav-btn" id="btnExportLogs">📥 EXPORT JSON</button>
+                    <button class="nav-btn" id="btnClearLogs">🗑️ CLEAR LOGS</button>
+                </div>
+            </div>
+
+            <div class="analytics-table-wrap">
+                <table class="analytics-table">
+                    <thead>
+                        <tr>
+                            <th>MATCH ID</th>
+                            <th>REGION</th>
+                            <th>GAME NAME</th>
+                            <th>WINNER</th>
+                            <th>MODE</th>
+                            <th>AI DIFFICULTY</th>
+                            <th>DURATION</th>
+                            <th>MOVES</th>
+                            <th>ACCURACY</th>
+                            <th>TIMESTAMP</th>
+                            <th>POST-MORTEM</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <!-- Populated dynamically via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Clear Logs Confirmation Modal -->
+            <div class="modal-overlay" id="clearLogsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:9999; justify-content:center; align-items:center;">
+                <div style="background:rgba(28,14,38,0.95); border:1px solid #ffd700; border-radius:16px; padding:24px; max-width:440px; width:90%; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,0.8);">
+                    <div style="font-size:2.5rem; margin-bottom:12px;">🗑️</div>
+                    <h3 style="font-family:var(--font-title); color:#ffd700; font-size:1.3rem; margin-bottom:8px;">CONFIRM LOGS PURGE</h3>
+                    <p style="font-size:0.88rem; color:#f0e8d0; line-height:1.6; margin-bottom:20px;">
+                        Are you sure you want to permanently clear all match replay logs? This executes a secure Firestore batch deletion and cannot be undone.
+                    </p>
+                    <div style="display:flex; justify-content:center; gap:12px;">
+                        <button id="btnCancelClearLogs" class="nav-btn" style="background:rgba(100,100,100,0.3); border-color:rgba(255,255,255,0.3); color:#fff;">CANCEL</button>
+                        <button id="btnConfirmClearLogs" class="nav-btn" style="background:rgba(220,38,38,0.7); border-color:#ff4d4d; color:#fff; font-weight:700;">YES, PURGE LOGS</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post-Mortem Detail Panel (hidden by default) -->
+            <div id="postMortemPanel" style="display:none; margin-top:20px; background:rgba(18,9,28,0.92); border:1px solid rgba(230,198,112,0.35); border-radius:16px; padding:24px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h3 style="font-family:var(--font-title); color:#ffd700; font-size:1.1rem;">⚙ ML POST-MORTEM DEEP ANALYSIS</h3>
+                    <button id="btnClosePostMortem" style="background:rgba(100,50,50,0.5); border:1px solid rgba(255,100,100,0.4); color:#ff9999; padding:5px 14px; border-radius:8px; cursor:pointer;">CLOSE ✕</button>
+                </div>
+                <div id="postMortemContent" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; font-size:0.88rem; color:var(--text-ivory);"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/audio.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script>
+        // Strict Admin Gate: Only authenticated admin can access
+        if (typeof BharathAuth !== 'undefined') {
+            BharathAuth.guardAdminPage();
+            document.addEventListener('DOMContentLoaded', function() {
+                var badge = document.getElementById('adminPlayerBadge');
+                if (badge) badge.textContent = '🛡️ ' + (BharathAuth.getUsername() || 'admin').toUpperCase();
+                var logoutBtn = document.getElementById('btnAdminLogout');
+                if (logoutBtn) logoutBtn.addEventListener('click', function() { BharathAuth.logout(); });
+            });
+        }
+    </script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

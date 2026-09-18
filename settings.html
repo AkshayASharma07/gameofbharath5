@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Game of Bharath - Player Settings, Language Selection & Data Management.">
+    <title data-i18n="settings_title">Game of Bharath | Realm Settings</title>
+    
+    <!-- Google Fonts: Inter, Outfit, Indian Scripts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/sutradhar.css">
+</head>
+<body class="theme-indian-art">
+
+    <div id="viewport-wrapper">
+        <!-- Indian Art Form Background Canvas & Vignettes -->
+        <div class="art-layer art-kalamkari-vines"></div>
+        <div class="art-layer art-warli-frieze"></div>
+        <div class="art-layer art-chitra-border"></div>
+
+        <div class="ambient-glow glow-1"></div>
+        <div class="ambient-glow glow-2"></div>
+
+        <!-- Canvas for Background Particle Drift -->
+        <canvas id="bg-canvas"></canvas>
+
+        <!-- Sacred Mandala Backdrop Motif -->
+        <svg class="mandala-backdrop" viewBox="0 0 500 500" fill="none">
+            <g stroke="#E6C670" stroke-width="0.75" opacity="0.85">
+                <circle cx="250" cy="250" r="230" stroke-dasharray="4 4"/>
+                <circle cx="250" cy="250" r="215"/>
+                <circle cx="250" cy="250" r="180"/>
+                <circle cx="250" cy="250" r="140" stroke-dasharray="8 4"/>
+                <circle cx="250" cy="250" r="90"/>
+                <circle cx="250" cy="250" r="40"/>
+                <path d="M250 20 L250 480 M20 250 L480 250 M87 87 L413 413 M87 413 L413 87"/>
+            </g>
+        </svg>
+
+        <!-- Audio Atmosphere Toggle -->
+        <button class="audio-control" id="audioToggle" title="Toggle Sound">
+            <svg class="audio-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            <span id="audioStatusText" data-i18n="sound_off">SOUND OFF</span>
+        </button>
+
+        <!-- Settings Screen Layout -->
+        <div class="settings-screen-wrapper">
+            <main class="settings-container">
+                <!-- Header Banner -->
+                <header class="settings-header">
+                    <div class="settings-header-left">
+                        <div class="settings-tag">👑 <span data-i18n="app_title">GAME OF BHARATH</span> • <span data-i18n="settings">SETTINGS</span></div>
+                        <h1 class="settings-title" data-i18n="settings_title">WARRIOR SETTINGS & REALM PREFERENCES</h1>
+                        <p class="settings-subtitle" data-i18n="settings_subtitle">Configure your lineage preferences, localization, and sacred records</p>
+                    </div>
+                    <div>
+                        <a href="map.html" class="btn-nav-back" id="btnBackToDashboard">
+                            <span>←</span>
+                            <span data-i18n="back_to_map">RETURN TO MAP</span>
+                        </a>
+                    </div>
+                </header>
+
+                <div class="settings-grid">
+                    <!-- SECTION 1: ACCOUNT PREFERENCES -->
+                    <section class="settings-card" id="cardAccountPrefs">
+                        <div class="card-header-group">
+                            <h2 class="card-title">
+                                <span>🛡️</span>
+                                <span data-i18n="section_account">WARRIOR ACCOUNT PREFERENCES</span>
+                            </h2>
+                            <p class="card-desc" data-i18n="section_account_desc">Authentication status and player lineage profile</p>
+                        </div>
+
+                        <div class="pref-rows-list">
+                            <div class="pref-row">
+                                <span class="pref-label" data-i18n="username_label">Warrior Name:</span>
+                                <span class="pref-value" id="settingsUsername">player</span>
+                            </div>
+                            <div class="pref-row">
+                                <span class="pref-label" data-i18n="lineage_label">Sanctioned Lineage:</span>
+                                <span class="pref-badge" id="settingsRoleBadge">⚔ PLAYER LINEAGE</span>
+                            </div>
+                            <div class="pref-row">
+                                <span class="pref-label" data-i18n="session_label">Session Established:</span>
+                                <span class="pref-value" id="settingsSessionTime">Real-time Session Active</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SECTION 2: LOCALIZATION & LANGUAGE ARCHITECTURE -->
+                    <section class="settings-card" id="cardLocalization">
+                        <div class="card-header-group">
+                            <h2 class="card-title">
+                                <span>🌐</span>
+                                <span data-i18n="section_localization">LOCALIZATION & LANGUAGE ARCHITECTURE</span>
+                            </h2>
+                            <p class="card-desc" data-i18n="section_localization_desc">Switch between all 22 official Indian languages and English</p>
+                        </div>
+
+                        <div class="lang-selector-box">
+                            <label for="languageSelect" class="pref-label" data-i18n="select_language_label">Select Language / भाषा चुनें:</label>
+                            <select id="languageSelect" class="lang-select-dropdown">
+                                <!-- Populated dynamically by settings.js with 22 official Indian languages + English -->
+                            </select>
+                            <p class="lang-hint">
+                                <span>✨</span>
+                                <span data-i18n="language_persisted_hint">Your selected language is immediately active and preserved in your Firestore lineage profile.</span>
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- SECTION 3: SUTRADHAR'S JOURNAL & LORE LIBRARY (MODULE 4) -->
+                    <section class="settings-card" id="cardLoreLibrary">
+                        <div class="card-header-group">
+                            <h2 class="card-title">
+                                <span>📜</span>
+                                <span>SUTRADHAR'S JOURNAL & LORE LIBRARY</span>
+                            </h2>
+                            <p class="card-desc">Chronicles of historical statecraft, cognitive neuroscience, and ancient wellness unlocked during your matches</p>
+                        </div>
+
+                        <div class="lore-journal-stats">
+                            <div>
+                                <span style="color: #ffd700; font-weight: 700; font-size: 0.9rem;">UNLOCKED LORE SCROLLS:</span>
+                                <strong id="loreCountDisplay" style="color: #fff; font-size: 1.1rem; margin-left: 6px;">0 / 10</strong>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #6ee7b7; font-weight: 600;" id="lorePercentDisplay">0% Discovered</div>
+                            <div class="lore-progress-bar-wrap">
+                                <div class="lore-progress-bar" id="loreProgressBar" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="lore-cards-grid" id="loreCardsGrid">
+                            <!-- Rendered dynamically by settings.js -->
+                        </div>
+                    </section>
+
+                    <!-- SECTION 4: DATA MANAGEMENT & RESET SCORES -->
+                    <section class="settings-card danger-zone" id="cardDataManagement">
+                        <div class="card-header-group">
+                            <h2 class="card-title">
+                                <span>⚠️</span>
+                                <span data-i18n="section_data">DATA MANAGEMENT & PROGRESS SANCTUARY</span>
+                            </h2>
+                            <p class="card-desc" data-i18n="section_data_desc">Manage your regional point tallies and historical match records</p>
+                        </div>
+
+                        <div class="danger-action-box">
+                            <div class="danger-text-group">
+                                <span class="danger-text-title" data-i18n="reset_scores_btn">RESET ALL SCORES</span>
+                                <p class="danger-text-desc" data-i18n="reset_scores_desc">
+                                    Explicitly resets all state-specific points (Karnataka, Punjab, Odisha, Maharashtra, Jammu & Kashmir) and the total warrior score strictly to 0.
+                                </p>
+                            </div>
+                            <button type="button" class="btn-reset-scores" id="btnOpenResetModal" data-i18n="reset_scores_btn">
+                                RESET ALL SCORES
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+
+        <!-- RESET CONFIRMATION MODAL -->
+        <div class="modal-overlay" id="resetConfirmationModal">
+            <div class="confirmation-card">
+                <div class="modal-icon-badge">🔥</div>
+                <h3 class="modal-header-title" data-i18n="reset_modal_title">CONFIRM EXTINCTION OF WARRIOR SCORES</h3>
+                <p class="modal-desc-body" data-i18n="reset_modal_desc">
+                    Are you certain you wish to reset your journey? All state-specific points and your total warrior score will be permanently set to 0 in your Firestore lineage records.
+                </p>
+                <div class="modal-actions-row">
+                    <button type="button" class="btn-modal-cancel" id="btnCancelReset" data-i18n="btn_cancel">CANCEL</button>
+                    <button type="button" class="btn-modal-confirm-reset" id="btnConfirmReset" data-i18n="btn_confirm_reset">YES, RESET ALL TO 0</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Engines -->
+    <script src="js/audio.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/sutradhar-data.js"></script>
+    <script src="js/sutradhar.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Game of Bharath - Karnataka Traditional Games & Heritage Dashboard.">
+    <title>Game of Bharath | Karnataka Province - Traditional Games</title>
+    
+    <!-- Google Fonts: Standardized SIH Professional Typography (Inter & Outfit) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/region.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/sutradhar.css">
+</head>
+<body class="theme-indian-art theme-state-karnataka">
+
+    <div id="viewport-wrapper">
+        <!-- Dedicated State Heritage Background Container -->
+        <div class="heritage-bg-container" id="heritageBgContainer">
+            <div class="heritage-bg-layer state-bg-direct is-active" id="heritageBgLayerA"></div>
+            <div class="heritage-bg-layer" id="heritageBgLayerB"></div>
+            <div class="heritage-bg-overlay"></div>
+        </div>
+
+        <!-- Indian Art Form Background Layers (Kalamkari, Warli, Chitra) -->
+        <div class="art-layer art-kalamkari-vines"></div>
+        <div class="art-layer art-warli-frieze"></div>
+        <div class="art-layer art-chitra-border"></div>
+        <!-- Ambient Vignette Glows -->
+        <div class="ambient-glow glow-1"></div>
+        <div class="ambient-glow glow-2"></div>
+
+        <!-- Canvas for Background Particle Drift -->
+        <canvas id="bg-canvas"></canvas>
+
+        <!-- Sacred Mandala Backdrop Motif -->
+        <svg class="mandala-backdrop" viewBox="0 0 500 500" fill="none">
+            <g stroke="#E6C670" stroke-width="0.75" opacity="0.85">
+                <circle cx="250" cy="250" r="230" stroke-dasharray="4 4"/>
+                <circle cx="250" cy="250" r="215"/>
+                <circle cx="250" cy="250" r="180"/>
+                <circle cx="250" cy="250" r="140" stroke-dasharray="8 4"/>
+                <circle cx="250" cy="250" r="90"/>
+                <circle cx="250" cy="250" r="40"/>
+                <path d="M250 20 L250 480 M20 250 L480 250 M87 87 L413 413 M87 413 L413 87"/>
+            </g>
+        </svg>
+
+        <!-- Audio Atmosphere Toggle -->
+        <button class="audio-control" id="audioToggle" title="Toggle Sound">
+            <svg class="audio-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            <span id="audioStatusText">SOUND OFF</span>
+        </button>
+
+        <!-- ==========================================================================
+             1. REGIONAL HISTORICAL LORE & GAME SELECTION SCREEN
+             ========================================================================== -->
+        <div class="region-page-wrapper" id="regionBriefingCard">
+            <div class="lore-modal-card">
+                <a href="map.html" class="modal-close-btn" title="Return to Map">&times;</a>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                    <span class="modal-region-badge">CHAPTER 1: SOUTHERN TEMPLE SPLENDOR & TRADITIONAL HERITAGE</span>
+                    <div class="score-badge-hud">
+                        <span>👑 WARRIOR SCORE:</span>
+                        <span class="score-value globalPlayerScore">0</span>
+                        <span>PTS</span>
+                    </div>
+                </div>
+
+                <h2 class="modal-region-title">
+                    KARNATAKA 
+                    <span class="kannada-subtitle">ಕರ್ನಾಟಕ ಪ್ರಾಂತ್ಯ</span>
+                </h2>
+                <p class="modal-lore-text">
+                    Step into the glorious era of the Vijayanagara Empire and Hoysala artisans. Discover Karnataka's timeless intellectual heritage through two celebrated indigenous board games played across royal courts and temple courtyards.
+                </p>
+
+                <!-- Section: Interactive Games Showcase -->
+                <div class="games-section-title">CHOOSE AN INDIGENOUS GAME (ಸಾಂಪ್ರದಾಯಿಕ ಆಟಗಳು)</div>
+                
+                <div class="games-grid">
+                    <!-- Game 1: Aliguli Mane -->
+                    <div class="game-card">
+                        <div>
+                            <div class="game-card-header">
+                                <div class="game-card-icon">🪵</div>
+                                <div class="game-card-titles">
+                                    <div class="game-card-title">Aliguli Mane</div>
+                                    <div class="game-card-kannada">ಕವಣೆಮನೆ / ಅಳಿಗುಳಿ ಮನೆ</div>
+                                    <div class="game-card-genre">Mancala Pit &amp; Seed Strategy</div>
+                                </div>
+                            </div>
+                            <p class="game-card-desc">
+                                A traditional mancala-style board game played using seeds or beads in wooden pits. Distribute seeds counter-clockwise, perform tactical empty-pit captures, and collect the largest harvest into your royal storehouse.
+                            </p>
+                            <div class="game-card-tags">
+                                <span class="game-tag">14 Carved Pits</span>
+                                <span class="game-tag">Tactical Sowing</span>
+                                <span class="game-tag">Easy AI Mode 🟢</span>
+                            </div>
+                        </div>
+                        <button class="play-game-btn" id="btnLaunchAliguli">
+                            <span>🪵</span> PLAY ALIGULI MANE
+                        </button>
+                    </div>
+
+                    <!-- Game 2: Chowkabara -->
+                    <div class="game-card">
+                        <div>
+                            <div class="game-card-header">
+                                <div class="game-card-icon">🐚</div>
+                                <div class="game-card-titles">
+                                    <div class="game-card-title">Chowkabara</div>
+                                    <div class="game-card-kannada">ಚೌಕಬಾರ (ಕವಡೆ ಆಟ)</div>
+                                    <div class="game-card-genre">Cross &amp; Circle Cowrie Race</div>
+                                </div>
+                            </div>
+                            <p class="game-card-desc">
+                                A traditional cross-and-circle board game of strategy and race using cowrie shells (Kavade). Roll shells, navigate 4 pawns along the outer perimeter, capture opponent pieces, and race to the central Mahamane.
+                            </p>
+                            <div class="game-card-tags">
+                                <span class="game-tag">5x5 Board</span>
+                                <span class="game-tag">4 Cowrie Shells</span>
+                                <span class="game-tag">Easy AI Mode 🟢</span>
+                            </div>
+                        </div>
+                        <button class="play-game-btn" id="btnLaunchChowkabara">
+                            <span>🐚</span> PLAY CHOWKABARA
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Heritage Relics Summary -->
+                <div class="artifacts-grid">
+                    <div class="artifact-item">
+                        <div class="artifact-icon">🛕</div>
+                        <div class="artifact-name">Stone Chariot</div>
+                    </div>
+                    <div class="artifact-item">
+                        <div class="artifact-icon">🪙</div>
+                        <div class="artifact-name">Vijayanagara Gadyana</div>
+                    </div>
+                    <div class="artifact-item">
+                        <div class="artifact-icon">🪕</div>
+                        <div class="artifact-name">Hoysala Veena</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+             FEATURE 1: REAL-WORLD MATERIALS EDUCATIONAL POP-UP MODAL
+             ========================================================================== -->
+        <div class="educational-modal-backdrop" id="materialsModal" style="display: none;">
+            <div class="educational-modal-card">
+                <button class="modal-close-btn" id="closeEduModalBtn" title="Close">&times;</button>
+                <span class="edu-badge" id="eduGameBadge">CULTURAL &amp; MATERIAL HERITAGE</span>
+                <h2 class="edu-title" id="eduGameTitle">Aliguli Mane</h2>
+                <div class="edu-kannada-title" id="eduGameKannada">ಅಳಿಗುಳಿ ಮನೆ - ಸಾಂಪ್ರದಾಯಿಕ ಪರಿಕರಗಳು</div>
+                <p class="edu-intro-text" id="eduGameIntro">
+                    Explore the tangible history, artisan craftsmanship, and organic materials traditionally used to play this ancient game across Karnataka.
+                </p>
+
+                <!-- 3-Item Materials Showcase Grid -->
+                <div class="materials-grid" id="eduMaterialsGrid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+
+                <!-- Action Controls -->
+                <div class="edu-actions-row">
+                    <button class="btn-skip-direct" id="btnSkipToLobby">PROCEED TO LOBBY ➔</button>
+                    <button class="btn-proceed-tutorial" id="btnProceedToTutorial">START TUTORIAL &amp; RULES ➔</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+             FEATURE 2: PRE-GAME LOBBY SELECTION MODAL (MODE & AI DIFFICULTY)
+             ========================================================================== -->
+        <div class="lobby-modal-backdrop" id="lobbyModal" style="display: none;">
+            <div class="lobby-modal-card">
+                <button class="modal-close-btn" id="closeLobbyModalBtn" title="Close">&times;</button>
+                <h2 class="lobby-title" id="lobbyGameTitle">Aliguli Mane</h2>
+                <div class="lobby-subtitle" id="lobbyGameSubtitle">ಅಳಿಗುಳಿ ಮನೆ - Match Setup &amp; AI Difficulty</div>
+
+                <!-- 1. Mode Selection -->
+                <div class="lobby-section-label">CHOOSE MATCH MODE:</div>
+                <div class="mode-selector-grid">
+                    <div class="mode-option-btn active" id="btnModeAI">
+                        <div class="mode-option-icon">🤖</div>
+                        <div>
+                            <div class="mode-option-title">Play with AI</div>
+                            <div class="mode-option-desc">Solo match against dynamic AI</div>
+                        </div>
+                    </div>
+                    <div class="mode-option-btn" id="btnModeFriend">
+                        <div class="mode-option-icon">👥</div>
+                        <div>
+                            <div class="mode-option-title">Play with Friend</div>
+                            <div class="mode-option-desc">Local 2-Player Pass &amp; Play</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. AI Difficulty Level Selector (Shown if AI mode active) -->
+                <div id="lobbyDiffSection">
+                    <div class="lobby-section-label">AI DIFFICULTY LEVEL:</div>
+                    <div class="difficulty-selector-grid">
+                        <div class="diff-option-btn active diff-easy" data-diff="easy" id="btnDiffEasy">
+                            <div class="diff-name">🟢 Easy</div>
+                            <div class="diff-desc">Casual play with random/suboptimal moves.</div>
+                        </div>
+                        <div class="diff-option-btn diff-medium" data-diff="medium" id="btnDiffMedium">
+                            <div class="diff-name">🟡 Medium</div>
+                            <div class="diff-desc">Balanced captures and defensive blocking.</div>
+                        </div>
+                        <div class="diff-option-btn diff-hard" data-diff="hard" id="btnDiffHard">
+                            <div class="diff-name">🔴 Hard</div>
+                            <div class="diff-desc">Advanced minimax heuristic strategy.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Friend Mode Custom Names Input (Shown if Friend mode active) -->
+                <div id="lobbyNamesSection" style="display: none;">
+                    <div class="lobby-section-label">CUSTOM PLAYER NAMES:</div>
+                    <div class="player-names-grid">
+                        <div class="name-input-group">
+                            <label class="name-input-label" for="inputPlayer1Name">Player 1 (Bottom Row)</label>
+                            <input type="text" id="inputPlayer1Name" class="name-input-field" value="Player 1" maxlength="16">
+                        </div>
+                        <div class="name-input-group">
+                            <label class="name-input-label" for="inputPlayer2Name">Player 2 (Top Row)</label>
+                            <input type="text" id="inputPlayer2Name" class="name-input-field" value="Player 2" maxlength="16">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Match Launch Action -->
+                <button class="play-game-btn" id="btnStartMatch" style="height: 52px; font-size: 1.05rem;">
+                    <span>⚔️</span> START MATCH NOW
+                </button>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+             FEATURE 2: SKIPPABLE INTERACTIVE TUTORIAL OVERLAY
+             ========================================================================== -->
+        <div class="tutorial-overlay" id="tutorialOverlay" style="display: none;">
+            <div class="tutorial-header">
+                <span class="tutorial-step-badge" id="tutStepBadge">STEP 1 OF 4</span>
+                <button class="skip-tutorial-btn" id="btnSkipTutorial">SKIP TUTORIAL ✕</button>
+            </div>
+            <h3 class="tutorial-title" id="tutTitle">Understanding the Board</h3>
+            <p class="tutorial-content" id="tutContent">
+                Learn the essential rules and tactics of this ancient game step-by-step.
+            </p>
+            <div class="tutorial-footer">
+                <div class="tutorial-dots" id="tutDots">
+                    <span class="tutorial-dot active"></span>
+                    <span class="tutorial-dot"></span>
+                    <span class="tutorial-dot"></span>
+                    <span class="tutorial-dot"></span>
+                </div>
+                <div class="tutorial-nav-btns">
+                    <button class="tut-btn tut-btn-prev" id="btnTutPrev">PREVIOUS</button>
+                    <button class="tut-btn tut-btn-next" id="btnTutNext">NEXT ➔</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+             FEATURE 3: GAME 1 - ALIGULI MANE INTERACTIVE PROTOTYPE SCREEN
+             ========================================================================== -->
+        <div class="game-container-view" id="aliguliGameScreen" style="display: none;">
+            <div class="game-header-bar">
+                <div class="game-title-group">
+                    <h2>ALIGULI MANE</h2>
+                    <div class="game-kannada-label">ಅಳಿಗುಳಿ ಮನೆ / ಕವಣೆಮನೆ • Mancala Pit Strategy</div>
+                </div>
+                <div class="game-nav-actions">
+                    <span class="ai-easy-badge">EASY AI 🟢</span>
+                    <div class="score-badge-hud">
+                        <span>SCORE:</span>
+                        <span class="score-value globalPlayerScore">0</span>
+                        <span>PTS</span>
+                    </div>
+                    <button class="nav-btn" id="btnAliguliTutorial">📖 TUTORIAL</button>
+                    <button class="nav-btn" id="btnResetAliguli">RESET BOARD</button>
+                    <button class="nav-btn btn-back-dashboard">BACK TO REGION</button>
+                </div>
+            </div>
+
+            <div class="aliguli-board-wrapper" id="aliguliBoardWrapper">
+                <div style="text-align: center;">
+                    <div class="aliguli-status-banner" id="aliguliStatus">Your Turn: Click one of your pits (Bottom Row)</div>
+                </div>
+
+                <div class="aliguli-layout">
+                    <!-- AI Store (Left) -->
+                    <div class="mancala-store" id="aiStore">
+                        <div class="store-label">AI STORE<br>(ರಕ್ಷಿತ ಭಂಡಾರ)</div>
+                        <div class="store-count" id="aiStoreCount">0</div>
+                    </div>
+
+                    <!-- 14 Pits Grid (2 rows of 7) -->
+                    <div class="pits-center-grid">
+                        <!-- AI Top Row (Pits 13 down to 7) -->
+                        <div id="aiPitsSection">
+                            <div class="row-label">OPPONENT / AI PITS (ಮೇಲಿನ ಸಾಲು)</div>
+                            <div class="pits-row" id="aiPitsRow">
+                                <!-- Generated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Player Bottom Row (Pits 0 to 6) -->
+                        <div id="playerPitsSection">
+                            <div class="pits-row" id="playerPitsRow">
+                                <!-- Generated dynamically -->
+                            </div>
+                            <div class="row-label" style="margin-top: 6px;">PLAYER PITS (ಕೆಳಗಿನ ಸಾಲು - ನಿಮ್ಮ ಮನೆಗಳು)</div>
+                        </div>
+                    </div>
+
+                    <!-- Player Store (Right) -->
+                    <div class="mancala-store" id="playerStore">
+                        <div class="store-label">PLAYER STORE<br>(ನಿಮ್ಮ ಭಂಡಾರ)</div>
+                        <div class="store-count" id="playerStoreCount">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+             FEATURE 3: GAME 2 - CHOWKABARA INTERACTIVE PROTOTYPE SCREEN
+             ========================================================================== -->
+        <div class="game-container-view" id="chowkabaraGameScreen" style="display: none;">
+            <div class="game-header-bar">
+                <div class="game-title-group">
+                    <h2>CHOWKABARA</h2>
+                    <div class="game-kannada-label">ಚೌಕಬಾರ • 5x5 Cowrie Shell Strategy Race</div>
+                </div>
+                <div class="game-nav-actions">
+                    <span class="ai-easy-badge">EASY AI 🟢</span>
+                    <div class="score-badge-hud">
+                        <span>SCORE:</span>
+                        <span class="score-value globalPlayerScore">0</span>
+                        <span>PTS</span>
+                    </div>
+                    <button class="nav-btn" id="btnChowkabaraTutorial">📖 TUTORIAL</button>
+                    <button class="nav-btn" id="btnResetChowkabara">RESET GAME</button>
+                    <button class="nav-btn btn-back-dashboard">BACK TO REGION</button>
+                </div>
+            </div>
+
+            <div class="chowkabara-wrapper">
+                <!-- 5x5 Board -->
+                <div class="chowkabara-board" id="chowkabaraBoard">
+                    <!-- 25 Cells generated dynamically -->
+                </div>
+
+                <!-- Dice & Control Panel -->
+                <div class="chowkabara-panel" id="chowkabaraPanel">
+                    <div class="cb-turn-title" id="cbTurnIndicator">YOUR TURN: ROLL COWRIES</div>
+                    
+                    <div class="cowries-container" id="cowriesBox">
+                        <div class="cowrie-shell open" id="shell0">🐚</div>
+                        <div class="cowrie-shell open" id="shell1">🐚</div>
+                        <div class="cowrie-shell closed" id="shell2">🐚</div>
+                        <div class="cowrie-shell open" id="shell3">🐚</div>
+                    </div>
+
+                    <button class="roll-btn" id="btnRollCowries">ROLL COWRIES (ಕವಡೆ ಎಸೆ)</button>
+                    <div class="roll-result-badge" id="cbRollResult">Roll: -</div>
+
+                    <div class="game-log-box" id="cbLogBox">
+                        Welcome to Chowkabara! Roll the 4 cowrie shells to move your golden pawns.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+             FEATURE 4: UNIVERSAL CELEBRATION VICTORY MODAL WITH SCORE
+             ========================================================================== -->
+        <div class="victory-modal-backdrop" id="victoryModal" style="display: none;">
+            <div class="victory-modal-card">
+                <div class="victory-icon">🏆</div>
+                <h3 class="victory-title" id="victoryModalTitle">CHAMPION OF KARNATAKA</h3>
+                <p class="victory-subtitle" id="victoryModalSubtitle">You have mastered the ancient traditional strategy!</p>
+                
+                <div class="victory-stats-box">
+                    <div class="victory-stat-item">
+                        <div class="v-stat-label">MATCH SCORE</div>
+                        <div class="v-stat-val" id="vicMatchScore">+1500</div>
+                    </div>
+                    <div class="victory-stat-item">
+                        <div class="v-stat-label">TOTAL WARRIOR PTS</div>
+                        <div class="v-stat-val" id="vicTotalScore">0</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button class="play-game-btn" id="btnVictoryReplay" style="max-width: 200px;">PLAY AGAIN</button>
+                    <button class="btn-skip-direct btn-back-dashboard">RETURN TO MAP</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/audio.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/ml_adaptive.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/sutradhar-data.js"></script>
+    <script src="js/sutradhar.js"></script>
+    <script>
+        if (typeof BharathAuth !== 'undefined') {
+            BharathAuth.guardPage();
+        }
+    </script>
+    <script src="js/karnataka.js"></script>
+</body>
+</html>

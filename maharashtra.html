@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Game of Bharath - Maharashtra Traditional Games & Heritage Dashboard.">
+    <title>Game of Bharath | Maharashtra Province - Traditional Games</title>
+    
+    <!-- Google Fonts: Standardized SIH Professional Typography (Inter & Outfit) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/region.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/sutradhar.css">
+    <style>
+        /* 8x8 Ashtapada / Chaturanga Board */
+        .chaturanga-board {
+            display: grid;
+            grid-template-columns: repeat(8, 46px);
+            grid-template-rows: repeat(8, 46px);
+            border: 4px solid #ffd700;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+            margin: 10px auto;
+            background: #1a0f24;
+        }
+        .ch-cell {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+        .ch-cell.light { background: rgba(230, 198, 112, 0.22); }
+        .ch-cell.dark { background: rgba(38, 16, 48, 0.75); }
+        .ch-cell.selected { background: rgba(0, 255, 136, 0.45) !important; border: 2px solid #00ff88; }
+        .ch-cell.valid-move { background: rgba(255, 215, 0, 0.35) !important; border: 1.5px dashed #ffd700; }
+
+        /* Taabla 3-Square Concentric Mill Grid */
+        .taabla-board {
+            position: relative;
+            width: 360px;
+            height: 360px;
+            background: rgba(18, 9, 28, 0.94);
+            border: 3px solid #ff5252;
+            border-radius: 16px;
+            margin: 10px auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+        }
+        .taabla-node {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,82,82,0.6);
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .taabla-node:hover { background: rgba(255,82,82,0.3); transform: translate(-50%, -50%) scale(1.18); }
+        .taabla-node.selected { border-color: #00ff88; box-shadow: 0 0 15px #00ff88; transform: translate(-50%, -50%) scale(1.2); }
+        .t-pawn-red { width: 24px; height: 24px; border-radius: 50%; background: #ff5252; border: 2px solid #fff; box-shadow: 0 0 10px #ff5252; }
+        .t-pawn-blue { width: 24px; height: 24px; border-radius: 50%; background: #00e5ff; border: 2px solid #fff; box-shadow: 0 0 10px #00e5ff; }
+    </style>
+</head>
+<body class="theme-indian-art theme-state-maharashtra">
+
+    <div id="viewport-wrapper">
+        <!-- Dedicated State Heritage Background Container -->
+        <div class="heritage-bg-container" id="heritageBgContainer">
+            <div class="heritage-bg-layer state-bg-direct is-active" id="heritageBgLayerA"></div>
+            <div class="heritage-bg-layer" id="heritageBgLayerB"></div>
+            <div class="heritage-bg-overlay"></div>
+        </div>
+
+        <div class="art-layer art-kalamkari-vines"></div>
+        <div class="art-layer art-warli-frieze"></div>
+        <div class="art-layer art-chitra-border"></div>
+        <div class="ambient-glow glow-1"></div>
+        <div class="ambient-glow glow-2"></div>
+
+        <canvas id="bg-canvas"></canvas>
+
+        <svg class="mandala-backdrop" viewBox="0 0 500 500" fill="none">
+            <g stroke="#E6C670" stroke-width="0.75" opacity="0.85">
+                <circle cx="250" cy="250" r="230" stroke-dasharray="4 4"/>
+                <circle cx="250" cy="250" r="215"/>
+                <circle cx="250" cy="250" r="180"/>
+                <circle cx="250" cy="250" r="140" stroke-dasharray="8 4"/>
+                <circle cx="250" cy="250" r="90"/>
+                <circle cx="250" cy="250" r="40"/>
+                <path d="M250 20 L250 480 M20 250 L480 250 M87 87 L413 413 M87 413 L413 87"/>
+            </g>
+        </svg>
+
+        <button class="audio-control" id="audioToggle" title="Toggle Sound">
+            <svg class="audio-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            <span id="audioStatusText">SOUND OFF</span>
+        </button>
+
+        <!-- REGION BRIEFING -->
+        <div class="region-page-wrapper" id="regionBriefingCard">
+            <div class="lore-modal-card">
+                <a href="map.html" class="modal-close-btn" title="Return to Map">&times;</a>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                    <span class="modal-region-badge">CHAPTER 4: SAHYADRI FORTS & MARATHA STRATEGY</span>
+                    <div class="score-badge-hud">
+                        <span>👑 WARRIOR SCORE:</span>
+                        <span class="score-value globalPlayerScore">0</span>
+                        <span>PTS</span>
+                    </div>
+                </div>
+
+                <h2 class="modal-region-title">
+                    MAHARASHTRA
+                    <span class="kannada-subtitle">महाराष्ट्र राज्य • Realm of Forts &amp; Ancient Strategy</span>
+                </h2>
+                <p class="modal-lore-text">
+                    Step into the legendary Sahyadri strongholds of Chhatrapati Shivaji Maharaj. Master Chaturanga, the 4-fold epic military precursor to modern chess, and Taabla, the tactical village alignment and mill-capture board game.
+                </p>
+
+                <div class="games-section-title">CHOOSE AN INDIGENOUS GAME (पारंपारिक खेळ)</div>
+                
+                <div class="games-grid">
+                    <!-- Game 1: Chaturanga -->
+                    <div class="game-card">
+                        <div>
+                            <div class="game-card-header">
+                                <div class="game-card-icon">♚</div>
+                                <div class="game-card-titles">
+                                    <div class="game-card-title">Chaturanga</div>
+                                    <div class="game-card-kannada">ચતુરંગ / चतुरंग (Precursor to Chess)</div>
+                                    <div class="game-card-genre">Ancient 4-Limbed Military Strategy</div>
+                                </div>
+                            </div>
+                            <p class="game-card-desc">
+                                Command the four divisions of ancient Indian armies on an 8x8 Ashtapada board: Raja (King), Mantri (Counselor), Gaja (Leaping Elephant), Ratha (Chariot), Ashwa (Horse), and Padati (Foot Soldiers).
+                            </p>
+                            <div class="game-card-tags">
+                                <span class="game-tag">8x8 Ashtapada</span>
+                                <span class="game-tag">Leaping Elephants</span>
+                                <span class="game-tag">AI Difficulty Selector 🟢🟡🔴</span>
+                            </div>
+                        </div>
+                        <button class="play-game-btn" id="btnLaunchChaturanga">
+                            <span>♚</span> PLAY CHATURANGA
+                        </button>
+                    </div>
+
+                    <!-- Game 2: Taabla -->
+                    <div class="game-card">
+                        <div>
+                            <div class="game-card-header">
+                                <div class="game-card-icon">⭕</div>
+                                <div class="game-card-titles">
+                                    <div class="game-card-title">Taabla</div>
+                                    <div class="game-card-kannada">ताब्ला (Village Mill Alignment)</div>
+                                    <div class="game-card-genre">Concentric Alignment &amp; Mill Capture</div>
+                                </div>
+                            </div>
+                            <p class="game-card-desc">
+                                Place 9 tactical markers onto a 24-node concentric square grid. Align 3 pieces in a row to form a Mill and capture opponent pieces until victory is achieved!
+                            </p>
+                            <div class="game-card-tags">
+                                <span class="game-tag">24-Node Grid</span>
+                                <span class="game-tag">Mill Formations</span>
+                                <span class="game-tag">AI Difficulty Selector 🟢🟡🔴</span>
+                            </div>
+                        </div>
+                        <button class="play-game-btn" id="btnLaunchTaabla">
+                            <span>⭕</span> PLAY TAABLA
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EDUCATIONAL POP-UP MODAL -->
+        <div class="educational-modal-backdrop" id="materialsModal" style="display: none;">
+            <div class="educational-modal-card">
+                <button class="modal-close-btn" id="closeEduModalBtn" title="Close">&times;</button>
+                <span class="edu-badge" id="eduGameBadge">HISTORICAL &amp; EPIC ROOTS</span>
+                <h2 class="edu-title" id="eduGameTitle">Chaturanga</h2>
+                <div class="edu-kannada-title" id="eduGameSub">चतुरंग - प्राचीन सैनिकी इतिहास</div>
+                <p class="edu-intro-text" id="eduGameIntro">Explore the historical origins referenced in ancient epics like the Mahabharata and royal court treaties.</p>
+                <div class="materials-grid" id="eduMaterialsGrid"></div>
+                <div class="edu-actions-row">
+                    <button class="btn-skip-direct" id="btnSkipToLobby">PROCEED TO LOBBY ➔</button>
+                    <button class="btn-proceed-tutorial" id="btnProceedToTutorial">START TUTORIAL &amp; RULES ➔</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOBBY MODAL -->
+        <div class="lobby-modal-backdrop" id="lobbyModal" style="display: none;">
+            <div class="lobby-modal-card">
+                <button class="modal-close-btn" id="closeLobbyModalBtn" title="Close">&times;</button>
+                <h2 class="lobby-title" id="lobbyGameTitle">Chaturanga</h2>
+                <div class="lobby-subtitle" id="lobbyGameSubtitle">Match Setup &amp; AI Difficulty</div>
+                
+                <div class="lobby-section-label">CHOOSE MATCH MODE:</div>
+                <div class="mode-selector-grid">
+                    <div class="mode-option-btn active" id="btnModeAI">
+                        <div class="mode-option-icon">🤖</div>
+                        <div><div class="mode-option-title">Play with AI</div><div class="mode-option-desc">Solo match against dynamic AI</div></div>
+                    </div>
+                    <div class="mode-option-btn" id="btnModeFriend">
+                        <div class="mode-option-icon">👥</div>
+                        <div><div class="mode-option-title">Play with Friend</div><div class="mode-option-desc">Local Pass &amp; Play</div></div>
+                    </div>
+                </div>
+
+                <div id="lobbyDiffSection">
+                    <div class="lobby-section-label">AI DIFFICULTY LEVEL:</div>
+                    <div class="difficulty-selector-grid">
+                        <div class="diff-option-btn active diff-easy" data-diff="easy" id="btnDiffEasy"><div class="diff-name">🟢 Easy</div><div class="diff-desc">Casual play with random/basic moves.</div></div>
+                        <div class="diff-option-btn diff-medium" data-diff="medium" id="btnDiffMedium"><div class="diff-name">🟡 Medium</div><div class="diff-desc">Tactical piece captures &amp; defense.</div></div>
+                        <div class="diff-option-btn diff-hard" data-diff="hard" id="btnDiffHard"><div class="diff-name">🔴 Hard</div><div class="diff-desc">Advanced minimax strategic evaluation.</div></div>
+                    </div>
+                </div>
+
+                <div id="lobbyNamesSection" style="display: none;">
+                    <div class="lobby-section-label">CUSTOM PLAYER NAMES:</div>
+                    <div class="player-names-grid">
+                        <div class="name-input-group"><label class="name-input-label">Player 1 (Gold)</label><input type="text" id="inputPlayer1Name" class="name-input-field" value="Commander 1"></div>
+                        <div class="name-input-group"><label class="name-input-label">Player 2 (Dark)</label><input type="text" id="inputPlayer2Name" class="name-input-field" value="Commander 2"></div>
+                    </div>
+                </div>
+
+                <button class="play-game-btn" id="btnStartMatch" style="height: 52px; font-size: 1.05rem;"><span>⚔️</span> START MATCH NOW</button>
+            </div>
+        </div>
+
+        <!-- SKIPPABLE TUTORIAL OVERLAY -->
+        <div class="tutorial-overlay" id="tutorialOverlay" style="display: none;">
+            <div class="tutorial-header">
+                <span class="tutorial-step-badge" id="tutStepBadge">STEP 1 OF 4</span>
+                <button class="skip-tutorial-btn" id="btnSkipTutorial">SKIP TUTORIAL ✕</button>
+            </div>
+            <h3 class="tutorial-title" id="tutTitle">Understanding Chaturanga</h3>
+            <p class="tutorial-content" id="tutContent">Learn the rules step-by-step.</p>
+            <div class="tutorial-footer">
+                <div class="tutorial-dots" id="tutDots"></div>
+                <div class="tutorial-nav-btns">
+                    <button class="tut-btn tut-btn-prev" id="btnTutPrev">PREVIOUS</button>
+                    <button class="tut-btn tut-btn-next" id="btnTutNext">NEXT ➔</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME 1 SCREEN: CHATURANGA -->
+        <div class="game-container-view" id="chaturangaGameScreen" style="display: none;">
+            <div class="game-header-bar">
+                <div class="game-title-group">
+                    <h2>CHATURANGA (चतुरंग)</h2>
+                    <div class="game-kannada-label">8x8 Ashtapada Board • Ancient Military Warfare</div>
+                </div>
+                <div class="game-nav-actions">
+                    <span class="ai-easy-badge" id="chaturangaAiBadge">EASY AI 🟢</span>
+                    <div class="score-badge-hud"><span>SCORE:</span><span class="score-value globalPlayerScore">0</span><span>PTS</span></div>
+                    <button class="nav-btn" id="btnChaturangaTutorial">📖 TUTORIAL</button>
+                    <button class="nav-btn" id="btnResetChaturanga">RESET BOARD</button>
+                    <button class="nav-btn btn-back-dashboard">BACK TO REGION</button>
+                </div>
+            </div>
+
+            <div class="aliguli-board-wrapper">
+                <div class="aliguli-status-banner" id="chaturangaStatus">Your Turn: Select a piece to move!</div>
+                <div class="chaturanga-board" id="chaturangaBoard"></div>
+            </div>
+        </div>
+
+        <!-- GAME 2 SCREEN: TAABLA -->
+        <div class="game-container-view" id="taablaGameScreen" style="display: none;">
+            <div class="game-header-bar">
+                <div class="game-title-group">
+                    <h2>TAABLA (ताब्ला)</h2>
+                    <div class="game-kannada-label">24-Node Mill Grid • Alignment &amp; Capture</div>
+                </div>
+                <div class="game-nav-actions">
+                    <span class="ai-easy-badge" id="taablaAiBadge">EASY AI 🟢</span>
+                    <div class="score-badge-hud"><span>SCORE:</span><span class="score-value globalPlayerScore">0</span><span>PTS</span></div>
+                    <button class="nav-btn" id="btnTaablaTutorial">📖 TUTORIAL</button>
+                    <button class="nav-btn" id="btnResetTaabla">RESET BOARD</button>
+                    <button class="nav-btn btn-back-dashboard">BACK TO REGION</button>
+                </div>
+            </div>
+
+            <div class="aliguli-board-wrapper">
+                <div class="aliguli-status-banner" id="taablaStatus">Placement Phase: Click an open node to place a piece! (Pieces Left: 9)</div>
+                <div class="taabla-board" id="taablaBoard"></div>
+            </div>
+        </div>
+
+        <!-- VICTORY MODAL -->
+        <div class="victory-modal-backdrop" id="victoryModal" style="display: none;">
+            <div class="victory-modal-card">
+                <div class="victory-icon">🏆</div>
+                <h3 class="victory-title" id="victoryModalTitle">CHAMPION OF MAHARASHTRA</h3>
+                <p class="victory-subtitle" id="victoryModalSubtitle">You have mastered Maratha tactical games!</p>
+                <div class="victory-stats-box">
+                    <div class="victory-stat-item"><div class="v-stat-label">MATCH SCORE</div><div class="v-stat-val" id="vicMatchScore">+1500</div></div>
+                    <div class="victory-stat-item"><div class="v-stat-label">TOTAL WARRIOR PTS</div><div class="v-stat-val" id="vicTotalScore">0</div></div>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button class="play-game-btn" id="btnVictoryReplay" style="max-width: 200px;">PLAY AGAIN</button>
+                    <button class="btn-skip-direct btn-back-dashboard">RETURN TO MAP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/audio.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/ml_adaptive.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/sutradhar-data.js"></script>
+    <script src="js/sutradhar.js"></script>
+    <script>
+        if (typeof BharathAuth !== 'undefined') {
+            BharathAuth.guardPage();
+        }
+    </script>
+    <script src="js/maharashtra.js"></script>
+</body>
+</html>
